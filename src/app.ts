@@ -7,7 +7,7 @@ export class App {
   public host: express.Application;
   public server: Server;
   public io: socket.Server;
-  public count = 0;
+  // public count = 0;
 
   constructor() {
     this.host = express();
@@ -37,13 +37,18 @@ export class App {
     this.io.on("connection", (socket) => {
       console.log("new web connected");
 
-      socket.emit("countUpdated", this.count);
+      socket.emit("welcome", "Welcome!");
 
-      socket.on("increment", () => {
-        this.count++;
-        // socket.emit("countUpdated", this.count); // Emit to 1 connection
-        this.io.emit("countUpdated", this.count); // Emit event to every single connection
+      socket.on("messageSend", (message) => {
+        this.io.emit("messageReceived", message);
       });
+      // socket.emit("countUpdated", this.count);
+
+      // socket.on("increment", () => {
+      //   this.count++;
+      //   // socket.emit("countUpdated", this.count); // Emit to 1 connection
+      //   this.io.emit("countUpdated", this.count); // Emit event to every single connection
+      // });
     });
   }
 }
