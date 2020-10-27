@@ -41,7 +41,8 @@ export class App {
 
       socket.on("increment", () => {
         this.count++;
-        socket.emit("countUpdated", this.count);
+        // socket.emit("countUpdated", this.count); // Emit to 1 connection
+        this.io.emit("countUpdated", this.count); // Emit event to every single connection
       });
     });
   }
