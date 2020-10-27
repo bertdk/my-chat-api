@@ -7,6 +7,7 @@ export class App {
   public host: express.Application;
   public server: Server;
   public io: socket.Server;
+  public count = 0;
 
   constructor() {
     this.host = express();
@@ -33,8 +34,15 @@ export class App {
   }
 
   private initializeSocket() {
-    this.io.on("connection", () => {
+    this.io.on("connection", (socket) => {
       console.log("new web connected");
+
+      socket.emit("countUpdated", this.count);
+
+      socket.on("increment", () => {
+        this.count++;
+        socket.emit("countUpdated", this.count);
+      });
     });
   }
 }
