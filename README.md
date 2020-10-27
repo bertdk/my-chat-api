@@ -31,28 +31,40 @@ Sockets are used to have a connection from server to client and from client to s
 ### Subscribe
 
 - Get noticed when event send:
+
   - FE:
     ```ts
-    socket.on("eventName", (arguments) => {
+    socket.on('eventName', (arguments) => {
       // Action
     });
     ```
   - BE:
+
     ```ts
-    io.on("eventName", (arguments) => {
+    io.on('eventName', (arguments) => {
       // Action
     });
     ```
+
+  - Build-in events:
+    - When a user makes a connection: `io.on("connection", ...)`
+    - When a user gets disconnected: `socket.on("disconnect", ...)`
 
 ### Send
 
 - To 1 connection:
 
   ```ts
-  socket.emit("eventName", arguments);
+  socket.emit('eventName', arguments);
   ```
 
 - To all connection:
+
   ```ts
-  io.emit("eventName", arguments);
+  io.emit('eventName', arguments);
+  ```
+
+- Broadcast = send to everyone except the one who send it:
+  ```ts
+  socket.broadcast.emit('message', 'A new user has joined');
   ```
