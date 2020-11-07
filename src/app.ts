@@ -2,12 +2,10 @@ import * as express from 'express';
 import { createServer, Server } from 'http';
 import * as path from 'path';
 import * as socket from 'socket.io';
-
 export class App {
   public host: express.Application;
   public server: Server;
   public io: socket.Server;
-  // public count = 0;
 
   constructor() {
     this.host = express();
@@ -34,6 +32,8 @@ export class App {
   }
 
   private initializeSocket() {
+    const Filter = require('bad-words');
+    const filter = new Filter();
     this.io.on('connection', (socket) => {
       console.log('new web connected');
 
@@ -41,16 +41,21 @@ export class App {
 
       socket.broadcast.emit('message', 'A new user has joined');
 
-      socket.on('messageSend', (message) => {
+      socket.on('messageSend', (message, ack) => {
+        if (filter.isProfane(message)) {
+          return ack('Profanity is not allowed');
+        }
         this.io.emit('message', message);
+        ack('Delivered');
       });
 
       socket.on('disconnect', () => {
         this.io.emit('message', 'A user has left!');
       });
 
-      socket.on('sendLocation', ({ latitude, longitude }) => {
+      socket.on('sendLocation', ({ latitude, longitude }, ack) => {
         this.io.emit('message', `https://google.com/maps?q=${latitude},${longitude}`);
+        ack();
       });
     });
   }

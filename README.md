@@ -7,6 +7,8 @@
     - [Subscribe](#subscribe)
     - [Send](#send)
     - [Ack](#ack)
+      - [Implement](#implement)
+      - [Use case](#use-case)
 
 ## Intro
 
@@ -72,4 +74,21 @@ Sockets are used to have a connection from server to client and from client to s
 
 ### Ack
 
-- Allows the receiver of the event to process and acknowledge the event
+Allows the receiver of the event to process and acknowledge the event
+
+- Client (emit) -> server (receives) --acknowledgment--> client
+- Serve (emit) -> client (receives) --acknowledgment--> server
+
+#### Implement
+
+- Event emitter
+  - Last argument = function: will run when event is acknowledged (number of parameters depends on what receiver sends back arguments)
+- Receiver (listener)
+  - New parameter on callback function
+  - Call that parameter in the function
+  - Can send as many parameters back as you want
+
+#### Use case
+
+- Validation
+- Enable/disable buttons until ack
