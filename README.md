@@ -6,6 +6,7 @@
   - [Event](#event)
     - [Subscribe](#subscribe)
     - [Send](#send)
+    - [Ack](#ack)
 
 ## Intro
 
@@ -68,3 +69,7 @@ Sockets are used to have a connection from server to client and from client to s
   ```ts
   socket.broadcast.emit('message', 'A new user has joined');
   ```
+
+### Ack
+
+- Allows the receiver of the event to process and acknowledge the event
