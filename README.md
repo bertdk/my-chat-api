@@ -6,9 +6,9 @@
   - [Event](#event)
     - [Subscribe](#subscribe)
     - [Send](#send)
-    - [Ack](#ack)
-      - [Implement](#implement)
-      - [Use case](#use-case)
+  - [Ack](#ack)
+    - [Implement](#implement)
+    - [Use case](#use-case)
 
 ## Intro
 
@@ -33,25 +33,27 @@ Sockets are used to have a connection from server to client and from client to s
 
 ### Subscribe
 
-- Get noticed when event send:
+Get noticed when event send
 
-  - FE:
-    ```ts
+- FE:
+  ```ts
+  socket.on('eventName', (arguments) => {
+    // Action
+  });
+  ```
+- BE:
+
+  ```ts
+  io.on('connection', (socket) => {
     socket.on('eventName', (arguments) => {
       // Action
     });
-    ```
-  - BE:
+  });
+  ```
 
-    ```ts
-    io.on('eventName', (arguments) => {
-      // Action
-    });
-    ```
-
-  - Build-in events:
-    - When a user makes a connection: `io.on("connection", ...)`
-    - When a user gets disconnected: `socket.on("disconnect", ...)`
+- Build-in events:
+  - When a user makes a connection: `io.on("connection", ...)`
+  - When a user gets disconnected: `socket.on("disconnect", ...)`
 
 ### Send
 
@@ -72,23 +74,34 @@ Sockets are used to have a connection from server to client and from client to s
   socket.broadcast.emit('message', 'A new user has joined');
   ```
 
-### Ack
+## Ack
 
 Allows the receiver of the event to process and acknowledge the event
 
 - Client (emit) -> server (receives) --acknowledgment--> client
 - Serve (emit) -> client (receives) --acknowledgment--> server
 
-#### Implement
+### Implement
 
 - Event emitter
   - Last argument = function: will run when event is acknowledged (number of parameters depends on what receiver sends back arguments)
+  ```ts
+  socket.on('eventName', (arguments, callback) => {
+    // Action
+    callback(arguments);
+  });
+  ```
 - Receiver (listener)
   - New parameter on callback function
   - Call that parameter in the function
   - Can send as many parameters back as you want
+  ```ts
+  socket.broadcast.emit('message', 'message to send', (arguments) => {
+    // Action when acknowledged
+  });
+  ```
 
-#### Use case
+### Use case
 
 - Validation
 - Enable/disable buttons until ack
