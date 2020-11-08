@@ -85,21 +85,21 @@ Allows the receiver of the event to process and acknowledge the event
 
 - Event emitter
   - Last argument = function: will run when event is acknowledged (number of parameters depends on what receiver sends back arguments)
-  ```ts
-  socket.on('eventName', (arguments, callback) => {
-    // Action
-    callback(arguments);
-  });
-  ```
+    ```ts
+    socket.on('eventName', (arguments, callback) => {
+      // Action
+      callback(arguments);
+    });
+    ```
 - Receiver (listener)
   - New parameter on callback function
   - Call that parameter in the function
   - Can send as many parameters back as you want
-  ```ts
-  socket.broadcast.emit('message', 'message to send', (arguments) => {
-    // Action when acknowledged
-  });
-  ```
+    ```ts
+    socket.broadcast.emit('message', 'message to send', (arguments) => {
+      // Action when acknowledged
+    });
+    ```
 
 ### Use case
 
