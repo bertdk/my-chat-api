@@ -38,25 +38,28 @@ export class App {
     this.io.on('connection', (socket) => {
       console.log('new web connected');
 
-      socket.emit('message', generateMessage('Welcome!'));
-
-      socket.broadcast.emit('message', generateMessage('A new user has joined'));
-
       socket.on('messageSend', (message, ack) => {
         if (filter.isProfane(message)) {
           return ack('Profanity is not allowed');
         }
-        this.io.emit('message', generateMessage(message));
+        this.io.to('Pn').emit('message', generateMessage(message));
         ack('Delivered');
       });
 
       socket.on('disconnect', () => {
-        this.io.emit('message', generateMessage('A user has left!'));
+        this.io.to('Pn').emit('message', generateMessage('A user has left!'));
       });
 
       socket.on('sendLocation', ({ latitude, longitude }, ack) => {
-        this.io.emit('locationMessage', generateLocationMessage(latitude, longitude));
+        this.io.to('Pn').emit('locationMessage', generateLocationMessage(latitude, longitude));
         ack();
+      });
+
+      socket.on('join', ({ username, room }) => {
+        socket.join(room);
+
+        socket.emit('message', generateMessage('Welcome!'));
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined`));
       });
     });
   }

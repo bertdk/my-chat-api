@@ -9,6 +9,7 @@
   - [Ack](#ack)
     - [Implement](#implement)
     - [Use case](#use-case)
+  - [Room](#room)
 
 ## Intro
 
@@ -72,8 +73,20 @@ You can emit multiple arguments or an object
   ```
 
 - Broadcast = send to everyone except the one who send it:
+
   ```ts
   socket.broadcast.emit('message', 'A new user has joined');
+  ```
+
+- To = send message to everyone in a room, not to other rooms
+
+  ```ts
+  io.to(roomName).emit('message', 'A new user has joined');
+  ```
+
+- Broadcast = send to everyone in a room except the one who send it:
+  ```ts
+  socket.broadcast.to(roomName).emit('message', 'A new user has joined');
   ```
 
 ## Ack
@@ -107,3 +120,7 @@ Allows the receiver of the event to process and acknowledge the event
 
 - Validation
 - Enable/disable buttons until ack
+
+## Room
+
+- On server side: `socket.join(roomName)`
