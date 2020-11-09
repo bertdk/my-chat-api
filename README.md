@@ -10,6 +10,8 @@
     - [Implement](#implement)
     - [Use case](#use-case)
   - [Room](#room)
+    - [Send messages](#send-messages)
+    - [Minimum to save](#minimum-to-save)
 
 ## Intro
 
@@ -124,3 +126,23 @@ Allows the receiver of the event to process and acknowledge the event
 ## Room
 
 - On server side: `socket.join(roomName)`
+
+### Send messages
+
+- To = send message to everyone in a room, not to other rooms
+
+  ```ts
+  io.to(roomName).emit('message', 'A new user has joined');
+  ```
+
+- Broadcast = send to everyone in a room except the one who send it:
+  ```ts
+  socket.broadcast.to(roomName).emit('message', 'A new user has joined');
+  ```
+
+### Minimum to save
+
+- Id
+- Username
+- Room name
+- Relation username and room name
