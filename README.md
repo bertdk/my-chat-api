@@ -57,6 +57,8 @@ Get noticed when event send
 
 ### Send
 
+You can emit multiple arguments or an object
+
 - To 1 connection:
 
   ```ts

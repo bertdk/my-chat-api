@@ -2,6 +2,7 @@ import * as express from 'express';
 import { createServer, Server } from 'http';
 import * as path from 'path';
 import * as socket from 'socket.io';
+import { generateLocationMessage, generateMessage } from './utils/messages';
 export class App {
   public host: express.Application;
   public server: Server;
@@ -37,24 +38,24 @@ export class App {
     this.io.on('connection', (socket) => {
       console.log('new web connected');
 
-      socket.emit('message', 'Welcome!');
+      socket.emit('message', generateMessage('Welcome!'));
 
-      socket.broadcast.emit('message', 'A new user has joined');
+      socket.broadcast.emit('message', generateMessage('A new user has joined'));
 
       socket.on('messageSend', (message, ack) => {
         if (filter.isProfane(message)) {
           return ack('Profanity is not allowed');
         }
-        this.io.emit('message', message);
+        this.io.emit('message', generateMessage(message));
         ack('Delivered');
       });
 
       socket.on('disconnect', () => {
-        this.io.emit('message', 'A user has left!');
+        this.io.emit('message', generateMessage('A user has left!'));
       });
 
       socket.on('sendLocation', ({ latitude, longitude }, ack) => {
-        this.io.emit('message', `https://google.com/maps?q=${latitude},${longitude}`);
+        this.io.emit('locationMessage', generateLocationMessage(latitude, longitude));
         ack();
       });
     });
