@@ -12,6 +12,7 @@
   - [Room](#room)
     - [Send messages](#send-messages)
     - [Minimum to save](#minimum-to-save)
+  - [Heroku deploy](#heroku-deploy)
 
 ## Intro
 
@@ -146,3 +147,10 @@ Allows the receiver of the event to process and acknowledge the event
 - Username
 - Room name
 - Relation username and room name
+
+## Heroku deploy
+
+- Setup git repo
+- Setup Heroku
+  - `heroku create application-name`
+  - `git push heroku master`
