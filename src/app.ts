@@ -43,7 +43,10 @@ export class App {
         if (filter.isProfane(message)) {
           return ack('Profanity is not allowed');
         }
-        this.io.to('Pn').emit('message', generateMessage(message));
+
+        const user = getUser(socket.id);
+
+        this.io.to(user.room).emit('message', generateMessage(user.username, message));
         ack('Delivered');
       });
 
@@ -51,26 +54,27 @@ export class App {
         const user = removeUser(socket.id);
 
         if (user) {
-          return this.io.to(user.room).emit('message', generateMessage(`${user.username} has left!`));
+          return this.io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`));
         }
       });
 
       socket.on('sendLocation', ({ latitude, longitude }, ack) => {
-        this.io.to('Pn').emit('locationMessage', generateLocationMessage(latitude, longitude));
+        const user = getUser(socket.id);
+        this.io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, latitude, longitude));
         ack();
       });
 
       socket.on('join', ({ username, room }, callback) => {
-        const { error, user } = addUser(socket.id, username, room);
+        const result = addUser(socket.id, username, room);
 
-        if (error) {
-          return callback(error);
+        if (result.error) {
+          return callback(result.error);
         }
 
-        socket.join(user.room);
+        socket.join(result.room);
 
-        socket.emit('message', generateMessage('Welcome!'));
-        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined`));
+        socket.emit('message', generateMessage('Admin', 'Welcome!'));
+        socket.broadcast.to(result.room).emit('message', generateMessage('Admin', `${result.username} has joined`));
 
         callback();
       });

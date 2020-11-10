@@ -1,6 +1,9 @@
-export const users = [];
+import { IError } from 'interfaces/error.interface';
+import { IUser } from '../interfaces/user.interface';
 
-export const addUser = (id: string, username: string, room: string) => {
+export const users: IUser[] = [];
+
+export const addUser = (id: string, username: string, room: string): any => {
   username = username.trim().toLowerCase();
   room = room.trim().toLowerCase();
 
@@ -20,10 +23,10 @@ export const addUser = (id: string, username: string, room: string) => {
 
   const user = { id, username, room };
   users.push(user);
-  return { user };
+  return user;
 };
 
-export const removeUser = (id: string) => {
+export const removeUser = (id: string): IUser => {
   const index = users.findIndex((user) => user.id === id);
 
   if (index !== -1) {
@@ -31,6 +34,6 @@ export const removeUser = (id: string) => {
   }
 };
 
-export const getUser = (id: string) => users.find((user) => user.id === id);
+export const getUser = (id: string): IUser => users.find((user) => user.id === id);
 
-export const getUsersInRoom = (room: string) => users.filter((user) => user.room === room);
+export const getUsersInRoom = (room: string): IUser[] => users.filter((user) => user.room === room);
