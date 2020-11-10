@@ -54,7 +54,11 @@ export class App {
         const user = removeUser(socket.id);
 
         if (user) {
-          return this.io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`));
+          this.io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`));
+          this.io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room),
+          });
         }
       });
 
@@ -75,6 +79,10 @@ export class App {
 
         socket.emit('message', generateMessage('Admin', 'Welcome!'));
         socket.broadcast.to(result.room).emit('message', generateMessage('Admin', `${result.username} has joined`));
+        this.io.to(result.room).emit('roomData', {
+          room: result.room,
+          users: getUsersInRoom(result.room),
+        });
 
         callback();
       });
