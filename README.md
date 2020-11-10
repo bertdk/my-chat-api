@@ -16,6 +16,8 @@
 
 ## Intro
 
+Live app: [Chattie app](https://berts-chattie-app.herokuapp.com)
+
 Sockets are used to have a connection from server to client and from client to server. The server can notify the client when something happened.
 
 ## Install
