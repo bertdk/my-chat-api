@@ -142,7 +142,7 @@ Allows the receiver of the event to process and acknowledge the event
 
 ### Minimum to save
 
-- Id
+- Id: server side: `socket.id`
 - Username
 - Room name
 - Relation username and room name

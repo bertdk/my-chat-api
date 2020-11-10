@@ -3,6 +3,7 @@ import { createServer, Server } from 'http';
 import * as path from 'path';
 import * as socket from 'socket.io';
 import { generateLocationMessage, generateMessage } from './utils/messages';
+import { addUser, getUser, getUsersInRoom, removeUser } from './utils/users';
 export class App {
   public host: express.Application;
   public server: Server;
@@ -47,7 +48,11 @@ export class App {
       });
 
       socket.on('disconnect', () => {
-        this.io.to('Pn').emit('message', generateMessage('A user has left!'));
+        const user = removeUser(socket.id);
+
+        if (user) {
+          return this.io.to(user.room).emit('message', generateMessage(`${user.username} has left!`));
+        }
       });
 
       socket.on('sendLocation', ({ latitude, longitude }, ack) => {
@@ -55,11 +60,19 @@ export class App {
         ack();
       });
 
-      socket.on('join', ({ username, room }) => {
-        socket.join(room);
+      socket.on('join', ({ username, room }, callback) => {
+        const { error, user } = addUser(socket.id, username, room);
+
+        if (error) {
+          return callback(error);
+        }
+
+        socket.join(user.room);
 
         socket.emit('message', generateMessage('Welcome!'));
-        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined`));
+        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined`));
+
+        callback();
       });
     });
   }
