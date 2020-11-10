@@ -25,7 +25,8 @@
   "scripts": {
     "dev": "nodemon ./src/index.ts -e html,ts,js --watch ./public --watch ./src",
     "start": "cross-env NODE_PATH=./dist node dist/index.js",
-    "deploy": "git push heroku master",
+    "deploy:master": "git push heroku master",
+    "deploy:staging": "git push heroku staging",
     "build": "tsc"
   },
   "author": "Bert DK",
