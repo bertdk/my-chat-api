@@ -1,12 +1,23 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
+    "typeRoots": ["src/utils/definitions", "node_modules/@types"],
+    "target": "es2019",
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es2017",
     "outDir": "./dist",
-    "baseUrl": "./src"
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "incremental": true,
+    "lib": ["es2019", "es6", "dom", "dom.iterable"],
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./src/*", "./tests/*"]
+    },
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    "esModuleInterop": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
