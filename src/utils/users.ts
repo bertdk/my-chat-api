@@ -1,4 +1,3 @@
-import { IError } from 'interfaces/error.interface';
 import { IUser } from '../interfaces/user.interface';
 
 export const users: IUser[] = [];

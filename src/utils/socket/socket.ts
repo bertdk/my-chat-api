@@ -1,7 +1,7 @@
 import { Server } from 'http';
 import socket from 'socket.io';
 import { generateMessage, generateLocationMessage } from '../messages';
-import { getUser, removeUser, getUsersInRoom, addUser } from '../users';
+import { getUser, removeUser, getUsersInRoom, addUser, users } from '../users';
 
 export let io: socket.Server;
 
@@ -15,6 +15,10 @@ const onConnection = (socket: socket.Socket) => {
 
   socket.on('messageSend', (message: string, ack) => {
     const user = getUser(socket.id);
+
+    if (!(user && user.room && user.username)) {
+      return ack('Not valid');
+    }
 
     io.to(user.room).emit('message', generateMessage(user.username, message));
     ack('Delivered');
@@ -34,6 +38,9 @@ const onConnection = (socket: socket.Socket) => {
 
   socket.on('sendLocation', ({ latitude, longitude }, ack) => {
     const user = getUser(socket.id);
+    if (!(user && user.room && user.username)) {
+      return ack('Not valid');
+    }
     io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, latitude, longitude));
     ack();
   });
