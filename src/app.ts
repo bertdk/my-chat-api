@@ -33,11 +33,7 @@ export class App {
   private initializeMiddleware() {
     const publicDirectoryPath = path.join(__dirname, '../public');
 
-    this.host.use(
-      cors({
-        exposedHeaders: ['x-auth', 'x-refresh-token'],
-      })
-    );
+    this.host.use(cors());
 
     this.host.use(express.static(publicDirectoryPath));
   }
