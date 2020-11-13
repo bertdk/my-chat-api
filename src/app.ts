@@ -32,10 +32,9 @@ export class App {
 
   private initializeMiddleware() {
     const publicDirectoryPath = path.join(__dirname, '../public');
+    this.host.use(express.static(publicDirectoryPath));
 
     this.host.use(cors());
-
-    this.host.use(express.static(publicDirectoryPath));
   }
 
   private initializeRouters(routers: Array<ClassType<IRouter>>) {
